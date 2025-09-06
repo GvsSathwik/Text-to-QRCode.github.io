@@ -14,99 +14,255 @@
     }
 
     body {
-      background: #f0f2f5;
+      background: #f4f6f9;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       padding: 20px;
+      color: #333;
     }
 
     .container {
-      background: white;
+      background: #fff;
       padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
+      animation: fadeIn 0.5s ease;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 24px;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1f2937;
     }
 
-    select, input, button {
+    /* Sections */
+    .section {
+      background: #fafafa;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    .section:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.15);
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #374151;
+    }
+
+    select, input[type="text"], button {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
+      padding: 12px 14px;
+      margin: 8px 0;
+      border: 1.8px solid #d1d5db;
       border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.25s ease;
     }
 
+    input[type="text"], select {
+      background: #fff;
+    }
+
+    input:focus, select:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    /* Buttons */
     button {
-      background-color: #4f46e5;
+      background: #3b82f6;
       color: white;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s ease;
+      border: none;
+      border-radius: 10px;
+      transition: all 0.25s ease;
     }
 
     button:hover {
-      background-color: #4338ca;
-    }
-
-    #qrResult {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    #qrResult img {
-      max-width: 200px;
-      margin-top: 10px;
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(59,130,246,0.25);
     }
 
     #downloadBtn {
-      margin-top: 10px;
-      background-color: #10b981;
+      background: #10b981;
     }
 
     #downloadBtn:hover {
-      background-color: #059669;
+      background: #059669;
+      box-shadow: 0 4px 10px rgba(16,185,129,0.25);
+    }
+
+    /* Color picker */
+    .color-options {
+      display: none;
+    }
+
+    .color-picker-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0;
+      padding: 10px 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .color-picker-group:hover {
+      border-color: #10b981;
+      box-shadow: 0 2px 8px rgba(16,185,129,0.15);
+    }
+
+    .color-picker-group label {
+      font-weight: 500;
+      color: #374151;
+      font-size: 0.95rem;
+    }
+
+    .color-picker-group input[type="color"] {
+      -webkit-appearance: none;
+      border: none;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      border-radius: 6px;
+      background: none;
+    }
+
+    .color-picker-group input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+      border-radius: 6px;
+    }
+
+    .color-picker-group input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 6px;
+    }
+
+    /* QR Result */
+    #qrResult {
+      text-align: center;
+      margin-top: 10px;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    #qrResult img {
+      max-width: 220px;
+      margin-top: 14px;
+      border: 5px solid #f3f4f6;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.25s ease;
+    }
+
+    #qrResult img:hover {
+      transform: scale(1.04);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>QR Code Generator</h2>
-    <select id="qrType">
-      <option value="text">Text</option>
-      <option value="url">Link</option>
-    </select>
-    <input type="text" id="qrInput" placeholder="Enter your content...">
-    <button onclick="generateQRCode()">Generate QR Code</button>
-    <div id="qrResult"></div>
+
+    <!-- Input Section -->
+    <div class="section">
+      <p class="section-title">Enter Content</p>
+      <select id="qrType">
+        <option value="text">Text</option>
+        <option value="url">Link</option>
+      </select>
+      <input type="text" id="qrInput" placeholder="Enter your content...">
+      <button onclick="generateQRCode()">Generate QR Code</button>
+    </div>
+
+    <!-- Color Section (Hidden initially) -->
+    <div class="section color-options" id="colorOptions">
+      <p class="section-title">Customize QR Code</p>
+      <div class="color-picker-group">
+        <label for="qrColor">Foreground Color:</label>
+        <input type="color" id="qrColor" value="#000000">
+      </div>
+      <button onclick="applyColors()">Apply Color</button>
+    </div>
+
+    <!-- Result Section -->
+    <div class="section">
+      <p class="section-title">Result</p>
+      <div id="qrResult"></div>
+    </div>
   </div>
 
   <script>
+    let lastInput = "";
+    let lastType = "text";
+
     function generateQRCode() {
       const type = document.getElementById("qrType").value;
       const input = document.getElementById("qrInput").value.trim();
       const result = document.getElementById("qrResult");
+      const colorOptions = document.getElementById("colorOptions");
 
       if (!input) {
         result.innerHTML = "<p style='color:red;'>Please enter some content.</p>";
+        colorOptions.style.display = "none";
         return;
       }
 
+      lastInput = input;
+      lastType = type;
+
       const qrData = encodeURIComponent(input);
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${qrData}`;
 
       result.innerHTML = `
-        <p><strong>${type.toUpperCase()} QR Code:</strong></p>
         <img id="qrImage" src="${qrUrl}" alt="QR Code" />
-        <a id="downloadBtn" href="${qrUrl}" download="qrcode.png">
+        <a href="${qrUrl}" download="qrcode.png">
+          <button id="downloadBtn">Download QR Code</button>
+        </a>`;
+
+      colorOptions.style.display = "block";
+    }
+
+    function applyColors() {
+      const result = document.getElementById("qrResult");
+      const fgColor = document.getElementById("qrColor").value.substring(1);
+
+      if (!lastInput) return;
+
+      const qrData = encodeURIComponent(lastInput);
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${qrData}&color=${fgColor}`;
+
+      result.innerHTML = `
+        <img id="qrImage" src="${qrUrl}" alt="QR Code" />
+        <a href="${qrUrl}" download="qrcode.png">
           <button id="downloadBtn">Download QR Code</button>
         </a>`;
     }
